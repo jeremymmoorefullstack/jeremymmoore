@@ -1,0 +1,28 @@
+<ol class="roles">
+    @foreach (var role in Roles)
+    {
+        <li class="role @(role.IsCurrent ? "is-current" : null)">
+            <div class="role-head">
+                <h3>@role.Title <span class="role-company">@role.Company</span></h3>
+                <span class="role-period">@role.Period</span>
+            </div>
+            <p class="role-summary">@role.Summary</p>
+            <ul class="role-highlights">
+                @foreach (var highlight in role.Highlights)
+                {
+                    <li>@highlight</li>
+                }
+            </ul>
+            <ul class="tags" aria-label="Stack">
+                @foreach (var tech in role.Stack)
+                {
+                    <li>@tech</li>
+                }
+            </ul>
+        </li>
+    }
+</ol>
+
+@code {
+    [Parameter, EditorRequired] public IEnumerable<Role> Roles { get; set; } = [];
+}

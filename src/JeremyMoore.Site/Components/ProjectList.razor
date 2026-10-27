@@ -1,0 +1,25 @@
+<ul class="projects">
+    @foreach (var project in Projects)
+    {
+        <li class="project">
+            <div class="project-head">
+                <h3>
+                    @if (project.Href is { } href)
+                    {
+                        <a href="@href" target="_blank" rel="noopener">@project.Name ↗</a>
+                    }
+                    else
+                    {
+                        @project.Name
+                    }
+                </h3>
+                <span class="project-lang">@project.Language</span>
+            </div>
+            <p>@project.Description</p>
+        </li>
+    }
+</ul>
+
+@code {
+    [Parameter, EditorRequired] public IReadOnlyList<Project> Projects { get; set; } = [];
+}

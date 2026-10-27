@@ -1,0 +1,18 @@
+<div class="skills">
+    @foreach (var group in Groups)
+    {
+        <div class="skill-group @(group.Primary ? "is-primary" : null)">
+            <h3>@group.Name</h3>
+            <ul class="tags">
+                @foreach (var item in group.Items)
+                {
+                    <li>@item</li>
+                }
+            </ul>
+        </div>
+    }
+</div>
+
+@code {
+    [Parameter, EditorRequired] public IReadOnlyList<SkillGroup> Groups { get; set; } = [];
+}

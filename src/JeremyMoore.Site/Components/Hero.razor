@@ -1,0 +1,33 @@
+@preservewhitespace true
+@inject Profile Profile
+@inject TimeProvider Clock
+
+<header class="hero">
+    <p class="eyebrow">@Profile.Location</p>
+    <h1 class="hero-name">@Profile.Name</h1>
+    <p class="hero-title">@Profile.Title</p>
+
+    <figure class="code-card" aria-label="@AriaSummary">
+        <figcaption class="code-card-bar"><span></span><span></span><span></span><em>Engineer.cs</em></figcaption>
+<pre><code><span class="tk-kw">var</span> jeremy = <span class="tk-kw">new</span> <span class="tk-type">Engineer</span>
+{
+    Focus  = <span class="tk-str">"C# · .NET · Azure"</span>,
+    Since  = <span class="tk-num">@Profile.CareerStart</span>,
+    Years  = <span class="tk-num">@Years</span>,
+    Remote = <span class="tk-kw">true</span>,
+};</code></pre>
+    </figure>
+
+    <dl class="stats">
+        <div><dt>Years shipping</dt><dd>@Years</dd></div>
+        <div><dt>Healthcare EDI</dt><dd>6 yrs</dd></div>
+        <div><dt>Remote</dt><dd>Always</dd></div>
+    </dl>
+</header>
+
+@code {
+    private int Years => Profile.YearsExperience(Clock);
+
+    private string AriaSummary =>
+        $"C#, .NET and Azure engineer since {Profile.CareerStart}, {Years} years of experience, remote.";
+}

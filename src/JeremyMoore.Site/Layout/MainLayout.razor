@@ -1,0 +1,12 @@
+@inherits LayoutComponentBase
+@inject Profile Profile
+@inject TimeProvider Clock
+
+<a class="skip" href="#main">Skip to content</a>
+<main id="main" class="page">
+    @Body
+</main>
+<footer class="footer page">
+    <span>© @Clock.GetLocalNow().Year @Profile.Name</span>
+    <span>Built with C# &amp; Blazor WebAssembly</span>
+</footer>

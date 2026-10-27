@@ -1,0 +1,16 @@
+<p class="contact-lede">The fastest way to reach me is email.</p>
+<ul class="contact">
+    @foreach (var link in Links)
+    {
+        <li>
+            <span class="contact-label">@link.Label</span>
+            <a href="@link.Href" target="@(IsExternal(link) ? "_blank" : null)" rel="@(IsExternal(link) ? "noopener" : null)">@link.Display</a>
+        </li>
+    }
+</ul>
+
+@code {
+    [Parameter, EditorRequired] public IReadOnlyList<ContactLink> Links { get; set; } = [];
+
+    private static bool IsExternal(ContactLink link) => link.Href.StartsWith("http", StringComparison.Ordinal);
+}

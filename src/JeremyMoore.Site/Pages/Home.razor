@@ -1,0 +1,26 @@
+@page "/"
+@inject Profile Profile
+
+<PageTitle>@Profile.Name · C# / .NET Engineer</PageTitle>
+
+<Hero />
+
+<Section Index="01" Title="About">
+    <p class="summary">@Profile.Summary</p>
+</Section>
+
+<Section Index="02" Title="Experience">
+    <ExperienceList Roles="Profile.ExperienceNewestFirst" />
+</Section>
+
+<Section Index="03" Title="Skills">
+    <SkillGroups Groups="Profile.Skills" />
+</Section>
+
+<Section Index="04" Title="Projects">
+    <ProjectList Projects="Profile.Projects" />
+</Section>
+
+<Section Index="05" Title="Contact">
+    <ContactLinks Links="Profile.Contact" />
+</Section>

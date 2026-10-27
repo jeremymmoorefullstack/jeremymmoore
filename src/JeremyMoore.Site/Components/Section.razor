@@ -1,0 +1,17 @@
+<section class="section" aria-labelledby="@Id">
+    <h2 id="@Id" class="section-label">
+        <span class="section-index">@Index</span>
+        @Title
+    </h2>
+    <div class="section-body">
+        @ChildContent
+    </div>
+</section>
+
+@code {
+    [Parameter, EditorRequired] public string Index { get; set; } = "";
+    [Parameter, EditorRequired] public string Title { get; set; } = "";
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    private string Id => $"section-{Title.ToLowerInvariant()}";
+}
