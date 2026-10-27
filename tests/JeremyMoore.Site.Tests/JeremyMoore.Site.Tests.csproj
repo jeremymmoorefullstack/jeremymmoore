@@ -21,6 +21,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\JeremyMoore.Site\JeremyMoore.Site.csproj" />
+    <ProjectReference Include="..\..\tools\JeremyMoore.Prerender\JeremyMoore.Prerender.csproj" />
   </ItemGroup>
 
 </Project>
