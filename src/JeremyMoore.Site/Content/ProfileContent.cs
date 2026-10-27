@@ -8,7 +8,7 @@ public static class ProfileContent
     public static Profile Jeremy { get; } = new(
         Name: "Jeremy M. Moore",
         Title: "Senior Full-Stack Engineer · C# / .NET",
-        Location: "San Francisco Bay Area · Remote",
+        Location: "Santa Rosa, Sonoma County · SF Bay Area · Remote",
         Summary:
             "I build dependable software on .NET: APIs, services, and the web apps in front of them. " +
             "My career runs from Classic ASP to .NET 8, including six years on HIPAA-regulated " +
