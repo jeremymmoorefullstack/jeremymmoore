@@ -9,6 +9,7 @@ public sealed record Profile(
     IReadOnlyList<Role> Experience,
     IReadOnlyList<Project> Projects,
     IReadOnlyList<SkillGroup> Skills,
+    IReadOnlyList<Degree> Education,
     IReadOnlyList<ContactLink> Contact)
 {
     public int CareerStart => Experience.Min(role => role.Start);
@@ -42,5 +43,7 @@ public sealed record Project(
     string? Href = null);
 
 public sealed record SkillGroup(string Name, IReadOnlyList<string> Items, bool Primary = false);
+
+public sealed record Degree(string Title, string Field, string School, int Year);
 
 public sealed record ContactLink(string Label, string Display, string Href);

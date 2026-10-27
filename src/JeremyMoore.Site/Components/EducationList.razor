@@ -1,0 +1,13 @@
+<ul class="degrees">
+    @foreach (var degree in Degrees)
+    {
+        <li class="role-head">
+            <h3>@degree.Title, @degree.Field <span class="role-company">@degree.School</span></h3>
+            <span class="role-period">@degree.Year</span>
+        </li>
+    }
+</ul>
+
+@code {
+    [Parameter, EditorRequired] public IReadOnlyList<Degree> Degrees { get; set; } = [];
+}

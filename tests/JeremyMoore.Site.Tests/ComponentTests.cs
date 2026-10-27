@@ -51,7 +51,7 @@ public class ComponentTests : BunitContext
 
         var ids = home.FindAll("h2.section-label").Select(h => h.Id);
         Assert.Equal(
-            ["section-about", "section-experience", "section-skills", "section-projects", "section-contact"],
+            ["section-about", "section-experience", "section-skills", "section-education", "section-projects", "section-contact"],
             ids);
     }
 }

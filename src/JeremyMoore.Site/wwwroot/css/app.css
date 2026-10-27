@@ -215,6 +215,9 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
     font-size: 0.85rem;
 }
 
+/* ---------- Education ---------- */
+.degrees { display: grid; gap: 1rem; }
+
 /* ---------- Projects ---------- */
 .projects { display: grid; gap: 1rem; }
 .project { padding: 1.1rem 1.25rem; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); }

@@ -94,6 +94,10 @@ public static class ProfileContent
             new SkillGroup("Cloud & Delivery", ["Azure", "Azure Functions", "Azure DevOps", "GitHub Actions", "Octopus Deploy", "AWS"]),
             new SkillGroup("JavaScript", ["React", "Next.js", "Node.js", "Vite"]),
         ],
+        Education:
+        [
+            new Degree("Bachelor of Science", "Software Development", "Western Governors University", 2018),
+        ],
         Contact:
         [
             new ContactLink("Email", "jeremy@jeremymmoore.com", "mailto:jeremy@jeremymmoore.com"),
