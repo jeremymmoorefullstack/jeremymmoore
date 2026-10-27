@@ -3,9 +3,14 @@
 @inject TimeProvider Clock
 
 <header class="hero">
-    <p class="eyebrow">@Profile.Location</p>
-    <h1 class="hero-name">@Profile.Name</h1>
-    <p class="hero-title">@Profile.Title</p>
+    <div class="hero-id">
+        <img class="hero-photo" src="img/jeremy-moore.webp" width="240" height="240" alt="Portrait of @Profile.Name" />
+        <div>
+            <p class="eyebrow">@Profile.Location</p>
+            <h1 class="hero-name">@Profile.Name</h1>
+            <p class="hero-title">@Profile.Title</p>
+        </div>
+    </div>
 
     <figure class="code-card" aria-label="@AriaSummary">
         <figcaption class="code-card-bar"><span></span><span></span><span></span><em>Engineer.cs</em></figcaption>
