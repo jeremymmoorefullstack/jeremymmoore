@@ -20,14 +20,16 @@ public static class ProfileContent
                 Company: "Dolooma",
                 Start: 2024,
                 End: null,
-                Summary: "Towing and roadside-assistance platform: client brand sites, APIs, and the pipelines that ship them.",
+                Summary: "Towing and roadside-assistance platform: client and product sites, APIs, AI phone agents, and the pipelines that ship them.",
                 Highlights:
                 [
-                    "Built a config-driven Next.js platform that runs nine client brand sites from one template.",
-                    "Wrote Azure Functions APIs on Node.js and MongoDB with database-per-tenant isolation.",
-                    "Own CI/CD and observability: GitHub Actions to Azure, with Application Insights across every site.",
+                    "Built an AI phone dispatcher on 800.com that answers roadside calls 24/7 and turns them into jobs through webhooks and live-lookup tools.",
+                    "Automated handoffs and alerts with n8n workflows: voice-to-job, SMS and email notifications, and pipeline failure alerts.",
+                    "Run a config-driven Next.js platform behind nearly twenty client and product sites.",
+                    "Lead technical SEO: JSON-LD, sitemaps and IndexNow, Google Business Profile, GA4 and Search Console, plus an internal dashboard that syncs listings and builds client reports.",
+                    "Write Azure Functions APIs on Node.js and MongoDB with Bicep infrastructure, and run Application Insights with alerts across every production site.",
                 ],
-                Stack: ["JavaScript", "React", "Next.js", "Node.js", "Azure Functions", "MongoDB"]),
+                Stack: ["JavaScript", "Next.js", "Node.js", "Azure Functions", "MongoDB", "n8n", "800.com"]),
             new Role(
                 Title: "Specialist Application Engineer",
                 Company: "Waystar",
@@ -91,8 +93,10 @@ public static class ProfileContent
                 ["C#", ".NET 8–10", "ASP.NET Core", "Web API", "Blazor", "Entity Framework", "MVC", "WebForms", "xUnit"],
                 Primary: true),
             new SkillGroup("Data", ["SQL Server", "T-SQL", "MongoDB", "Healthcare EDI (X12)"]),
-            new SkillGroup("Cloud & Delivery", ["Azure", "Azure Functions", "Azure DevOps", "GitHub Actions", "Octopus Deploy", "AWS"]),
-            new SkillGroup("JavaScript", ["React", "Next.js", "Node.js", "Vite"]),
+            new SkillGroup("Cloud & Delivery", ["Azure", "Azure Functions", "Bicep", "Application Insights", "Azure DevOps", "GitHub Actions", "Octopus Deploy", "AWS"]),
+            new SkillGroup("JavaScript", ["React", "Next.js", "Node.js", "Vite", "Playwright"]),
+            new SkillGroup("AI & Automation", ["800.com voice agents", "n8n", "MCP tools", "Webhooks", "Twilio", "Claude Code"]),
+            new SkillGroup("SEO & Analytics", ["Technical SEO", "JSON-LD", "Google Business Profile", "GA4", "Search Console", "IndexNow"]),
         ],
         Education:
         [
