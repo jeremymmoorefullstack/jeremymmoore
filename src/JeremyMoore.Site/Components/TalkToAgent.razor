@@ -1,0 +1,173 @@
+@implements IAsyncDisposable
+@inject IJSRuntime JS
+@inject Profile Profile
+
+@if (_state is not AgentState.Hidden)
+{
+    <div class="agent" data-state="@_state.ToString().ToLowerInvariant()">
+        @switch (_state)
+        {
+            case AgentState.Live:
+                <button type="button" class="agent-button is-live" @onclick="StopAsync">
+                    <span class="agent-dot" aria-hidden="true"></span>End call <span class="agent-time">@Elapsed</span>
+                </button>
+                <p class="agent-note" aria-live="polite">@(_speaking ? "Agent is speaking…" : "Listening…")</p>
+                break;
+
+            case AgentState.Starting:
+                <button type="button" class="agent-button" disabled>
+                    <span class="agent-dot" aria-hidden="true"></span>Connecting…
+                </button>
+                <p class="agent-note">Allow the microphone when your browser asks.</p>
+                break;
+
+            default:
+                <button type="button" class="agent-button" @onclick="StartAsync">
+                    <span class="agent-dot" aria-hidden="true"></span>@(_state is AgentState.Ended ? "Talk again" : "Talk to my AI agent")
+                </button>
+                <p class="agent-note" aria-live="polite">
+                    @if (_problem is not null)
+                    {
+                        @_problem
+                    }
+                    else if (_state is AgentState.Ended)
+                    {
+                        @:Thanks for talking. Prefer email? <a href="mailto:@Email">@Email</a>
+                    }
+                    else
+                    {
+                        @:I build voice agents for a living. Ask this one about my work. Uses your microphone, up to five minutes.
+                    }
+                </p>
+                break;
+        }
+    </div>
+}
+
+@code {
+    private static readonly TimeSpan MaxCall = TimeSpan.FromMinutes(5);
+
+    private IJSObjectReference? _module;
+    private DotNetObjectReference<TalkToAgent>? _self;
+    private CancellationTokenSource? _clock;
+    private AgentState _state = AgentState.Hidden;
+    private bool _speaking;
+    private string? _problem;
+    private TimeSpan _elapsed;
+
+    private string Email => Profile.Contact.First(link => link.Href.StartsWith("mailto:")).Display;
+
+    private string Elapsed => $"{(int)_elapsed.TotalMinutes:0}:{_elapsed.Seconds:00}";
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!firstRender)
+        {
+            return;
+        }
+
+        _module = await JS.InvokeAsync<IJSObjectReference>("import", "./js/agent.js");
+        if (await _module.InvokeAsync<bool>("available"))
+        {
+            _state = AgentState.Ready;
+            StateHasChanged();
+        }
+    }
+
+    private async Task StartAsync()
+    {
+        _state = AgentState.Starting;
+        _problem = null;
+        _self ??= DotNetObjectReference.Create(this);
+
+        var result = await _module!.InvokeAsync<string>("start", _self);
+        if (result != "live")
+        {
+            _state = AgentState.Ready;
+            _problem = result switch
+            {
+                "microphone" => "The agent needs your microphone. Allow it and try again.",
+                "busy" => "The agent's had a lot of calls. Try again later, or email " + Email + ".",
+                _ => "The agent isn't answering right now. Email " + Email + " instead.",
+            };
+            return;
+        }
+
+        _state = AgentState.Live;
+        _speaking = false;
+        _ = RunClockAsync();
+    }
+
+    private async Task StopAsync()
+    {
+        _clock?.Cancel();
+        if (_module is not null)
+        {
+            await _module.InvokeVoidAsync("stop");
+        }
+
+        _state = AgentState.Ended;
+    }
+
+    private async Task RunClockAsync()
+    {
+        _clock = new CancellationTokenSource();
+        var started = DateTimeOffset.UtcNow;
+        using var timer = new PeriodicTimer(TimeSpan.FromSeconds(1));
+
+        try
+        {
+            while (await timer.WaitForNextTickAsync(_clock.Token))
+            {
+                _elapsed = DateTimeOffset.UtcNow - started;
+                if (_elapsed >= MaxCall)
+                {
+                    await StopAsync();
+                }
+
+                StateHasChanged();
+            }
+        }
+        catch (OperationCanceledException)
+        {
+        }
+    }
+
+    [JSInvokable]
+    public void OnModeChanged(string mode)
+    {
+        _speaking = mode == "speaking";
+        StateHasChanged();
+    }
+
+    [JSInvokable]
+    public void OnEnded()
+    {
+        _clock?.Cancel();
+        if (_state is AgentState.Live)
+        {
+            _state = AgentState.Ended;
+            StateHasChanged();
+        }
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        _clock?.Cancel();
+        if (_module is not null)
+        {
+            try
+            {
+                await _module.InvokeVoidAsync("stop");
+                await _module.DisposeAsync();
+            }
+            catch (JSDisconnectedException)
+            {
+            }
+        }
+
+        _self?.Dispose();
+    }
+
+    private enum AgentState { Hidden, Ready, Starting, Live, Ended }
+}

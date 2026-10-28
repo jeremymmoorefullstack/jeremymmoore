@@ -13,6 +13,7 @@ public class ComponentTests : BunitContext
     {
         Services.AddSingleton<TimeProvider>(new FixedClock(new DateTimeOffset(2026, 6, 1, 12, 0, 0, TimeSpan.Zero)));
         Services.AddSingleton(ProfileContent.Jeremy);
+        JSInterop.SetupModule("./js/agent.js").Setup<bool>("available").SetResult(false);
     }
 
     [Fact]
@@ -53,5 +54,16 @@ public class ComponentTests : BunitContext
         Assert.Equal(
             ["section-about", "section-experience", "section-skills", "section-education", "section-projects", "section-contact"],
             ids);
+    }
+
+    [Fact]
+    public void Agent_button_stays_hidden_until_the_api_says_it_is_available()
+    {
+        var hidden = Render<TalkToAgent>();
+        Assert.Empty(hidden.FindAll("button"));
+
+        JSInterop.SetupModule("./js/agent.js").Setup<bool>("available").SetResult(true);
+        var shown = Render<TalkToAgent>();
+        Assert.Equal("Talk to my AI agent", shown.Find("button.agent-button").TextContent.Trim());
     }
 }

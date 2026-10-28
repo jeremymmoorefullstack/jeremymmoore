@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.JSInterop;
 using JeremyMoore.Site.Layout;
 using JeremyMoore.Site.Models;
 using JeremyMoore.Site.Pages;
@@ -27,6 +28,7 @@ public static class StaticSite
             .AddLogging()
             .AddSingleton(profile)
             .AddSingleton(clock)
+            .AddSingleton<IJSRuntime, NoBrowser>()
             .BuildServiceProvider();
 
         await using var renderer = new HtmlRenderer(services, services.GetRequiredService<ILoggerFactory>());
@@ -136,5 +138,15 @@ public static class StaticSite
 
         var html = string.Concat(indexHtml.AsSpan(0, start), appHtml, indexHtml.AsSpan(end + AppEnd.Length));
         return html.Replace(JsonLdMarker, jsonLd, StringComparison.Ordinal);
+    }
+
+    /// <summary>Prerendering has no browser; components only touch JS after render, which never happens here.</summary>
+    private sealed class NoBrowser : IJSRuntime
+    {
+        public ValueTask<TValue> InvokeAsync<TValue>(string identifier, object?[]? args) =>
+            throw new InvalidOperationException("JavaScript isn't available while prerendering.");
+
+        public ValueTask<TValue> InvokeAsync<TValue>(string identifier, CancellationToken cancellationToken, object?[]? args) =>
+            throw new InvalidOperationException("JavaScript isn't available while prerendering.");
     }
 }

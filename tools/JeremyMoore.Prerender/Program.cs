@@ -2,9 +2,18 @@ using JeremyMoore.Prerender;
 using JeremyMoore.Site.Content;
 
 // Usage: dotnet run --project tools/JeremyMoore.Prerender -- <published wwwroot>
+//        dotnet run --project tools/JeremyMoore.Prerender -- agent <folder>   (writes the agent's knowledge.md)
+if (args is ["agent", var agentFolder])
+{
+    var knowledgePath = Path.Combine(agentFolder, "knowledge.md");
+    await File.WriteAllTextAsync(knowledgePath, AgentKnowledge.Build(ProfileContent.Jeremy));
+    Console.WriteLine($"Wrote {knowledgePath}.");
+    return 0;
+}
+
 if (args is not [var wwwroot])
 {
-    Console.Error.WriteLine("Usage: JeremyMoore.Prerender <published wwwroot folder>");
+    Console.Error.WriteLine("Usage: JeremyMoore.Prerender <published wwwroot folder> | agent <folder>");
     return 1;
 }
 

@@ -28,6 +28,9 @@ jobs:
       - name: Publish
         run: dotnet publish src/JeremyMoore.Site --configuration Release --output publish
 
+      - name: Publish API
+        run: dotnet publish api/JeremyMoore.Api --configuration Release --output publish/api
+
       - name: Prerender HTML, JSON-LD and sitemap
         run: dotnet run --project tools/JeremyMoore.Prerender --configuration Release -- publish/wwwroot
 
@@ -38,7 +41,9 @@ jobs:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           action: upload
           app_location: publish/wwwroot
+          api_location: publish/api
           skip_app_build: true
+          skip_api_build: true
 
   close_preview:
     if: github.event_name == 'pull_request' && github.event.action == 'closed'

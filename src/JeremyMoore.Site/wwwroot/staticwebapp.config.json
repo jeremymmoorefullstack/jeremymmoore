@@ -1,7 +1,10 @@
 {
   "navigationFallback": {
     "rewrite": "/index.html",
-    "exclude": ["/_framework/*", "/css/*", "*.{svg,png,ico,json,wasm,dll,js}"]
+    "exclude": ["/_framework/*", "/css/*", "/js/*", "/api/*", "*.{svg,png,ico,json,wasm,dll,js,txt,xml,webp}"]
+  },
+  "platform": {
+    "apiRuntime": "dotnet-isolated:10.0"
   },
   "globalHeaders": {
     "X-Content-Type-Options": "nosniff",

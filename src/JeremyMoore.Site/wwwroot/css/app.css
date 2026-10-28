@@ -112,6 +112,43 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
 
 .hero-title { margin: 0.75rem 0 0; font-size: clamp(1.05rem, 2vw, 1.25rem); color: var(--muted); }
 
+/* ---------- Voice agent ---------- */
+.agent { margin: 2.25rem 0 0; }
+
+.agent-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.65rem;
+    padding: 0.7rem 1.15rem;
+    border: 1px solid color-mix(in srgb, var(--accent) 45%, var(--line));
+    border-radius: 999px;
+    background: var(--accent-dim);
+    color: var(--text);
+    font: 500 0.95rem/1 var(--sans);
+    cursor: pointer;
+}
+
+.agent-button:hover:not(:disabled) { border-color: var(--accent); }
+.agent-button:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+.agent-button:disabled { cursor: progress; opacity: 0.8; }
+
+.agent-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 0 0 var(--accent);
+}
+
+.agent-button.is-live .agent-dot, .agent-button:disabled .agent-dot { animation: agent-pulse 1.4s ease-out infinite; }
+.agent-time { font: 400 0.8rem var(--mono); color: var(--muted); }
+.agent-note { margin: 0.6rem 0 0; font-size: 0.9rem; color: var(--muted); }
+
+@keyframes agent-pulse {
+    0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--accent) 60%, transparent); }
+    100% { box-shadow: 0 0 0 10px transparent; }
+}
+
 .code-card {
     margin: 3rem 0 0;
     max-width: 30rem;
@@ -262,6 +299,7 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
 
 @media (prefers-reduced-motion: reduce) {
     html { scroll-behavior: auto; }
+    .agent-dot { animation: none !important; }
 }
 
 /* ---------- Blazor error UI ---------- */
