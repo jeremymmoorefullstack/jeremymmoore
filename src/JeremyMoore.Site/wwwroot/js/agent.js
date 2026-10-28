@@ -89,7 +89,7 @@ async function open(dotnet, kind, options, context) {
                     greeted();
                     return;
                 }
-                if (source === "ai" || kind === "voice") dotnet.invokeMethodAsync("OnMessage", source, message);
+                if (source === "ai" || kind === "voice") dotnet.invokeMethodAsync("OnMessage", source, withoutVoiceCues(message));
             },
             onModeChange: ({ mode: speaking }) => dotnet.invokeMethodAsync("OnModeChanged", speaking),
             onDisconnect: () => {
@@ -140,6 +140,11 @@ function watchMicrophone(dotnet, current) {
             dotnet.invokeMethodAsync("OnNoMicrophoneInput");
         }
     }, 500);
+}
+
+// Expressive voices get tone cues like "[warm]" or "[friendly]"; they shape the audio, not the transcript.
+function withoutVoiceCues(text) {
+    return text.replace(/\[[a-z][a-z \-]{0,24}\]\s*/gi, "").trim();
 }
 
 function delay(ms) {
