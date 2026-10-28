@@ -15,7 +15,8 @@ public sealed class AgentOptions
     public string MessageTo { get; set; } = "jeremy@jeremymmoore.com";
     public string MessageFrom { get; set; } = "jeremymmoore.com agent <agent@jeremymmoore.com>";
 
-    public int SessionsPerVisitorPerHour { get; set; } = 3;
+    // Text chats reconnect after idle gaps, so a visitor can need more than one session per conversation.
+    public int SessionsPerVisitorPerHour { get; set; } = 6;
     public int SessionsPerDay { get; set; } = 40;
 
     public bool IsConfigured =>

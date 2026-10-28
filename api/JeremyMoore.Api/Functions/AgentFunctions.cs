@@ -23,7 +23,10 @@ public sealed class AgentFunctions(
         [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "agent/status")] HttpRequestData request) =>
         await Json(request, HttpStatusCode.OK, new { available = options.Value.IsConfigured });
 
-    /// <summary>Starts a voice session: returns a single-use WebRTC token, never the API key.</summary>
+    /// <summary>
+    /// Starts a session and never returns the API key: a single-use WebRTC token for voice,
+    /// or a signed WebSocket URL for text chat (<c>?mode=text</c>).
+    /// </summary>
     [Function("AgentSession")]
     public async Task<HttpResponseData> Session(
         [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "agent/session")] HttpRequestData request,
@@ -41,6 +44,12 @@ public sealed class AgentFunctions(
 
         try
         {
+            if (IsTextMode(request))
+            {
+                var signedUrl = await elevenLabs.GetSignedUrlAsync(cancellationToken);
+                return await Json(request, HttpStatusCode.OK, new { signedUrl });
+            }
+
             var token = await elevenLabs.GetConversationTokenAsync(cancellationToken);
             return await Json(request, HttpStatusCode.OK, new { token });
         }
@@ -129,6 +138,9 @@ public sealed class AgentFunctions(
 
         return "unknown";
     }
+
+    public static bool IsTextMode(HttpRequestData request) =>
+        System.Web.HttpUtility.ParseQueryString(request.Url.Query)["mode"] == "text";
 
     public static bool HasToolSecret(HttpRequestData request, string? expected)
     {

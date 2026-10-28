@@ -4,6 +4,9 @@ namespace JeremyMoore.Site.Models;
 public sealed record Profile(
     string Name,
     string Title,
+    string Headline,
+    string Pitch,
+    string Availability,
     string Location,
     string Summary,
     IReadOnlyList<Role> Experience,
@@ -16,6 +19,9 @@ public sealed record Profile(
 
     public int YearsExperience(TimeProvider clock) =>
         clock.GetLocalNow().Year - CareerStart;
+
+    /// <summary><see cref="Pitch"/> with the years of experience filled in.</summary>
+    public string PitchFor(TimeProvider clock) => string.Format(Pitch, YearsExperience(clock));
 
     public IEnumerable<Role> ExperienceNewestFirst =>
         Experience.OrderByDescending(role => role.End ?? int.MaxValue)

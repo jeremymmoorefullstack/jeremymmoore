@@ -20,7 +20,8 @@ public class StaticSiteTests
             Assert.Contains($"id=\"section-{id}\"", html);
         }
 
-        Assert.Contains("<h1 class=\"hero-name\">Jeremy M. Moore</h1>", html);
+        Assert.Contains("<h1 class=\"hero-headline\">", html);
+        Assert.Contains("id=\"ask-input\"", html);
         Assert.Contains("2030 Jeremy M. Moore</span>", html);
     }
 

@@ -17,12 +17,14 @@ public class ComponentTests : BunitContext
     }
 
     [Fact]
-    public void Hero_renders_name_and_computed_years()
+    public void Hero_renders_headline_pitch_and_computed_years()
     {
         var hero = Render<Hero>();
 
-        hero.Find("h1").MarkupMatches("<h1 class=\"hero-name\">Jeremy M. Moore</h1>");
+        Assert.Equal(ProfileContent.Jeremy.Headline, hero.Find("h1.hero-headline").TextContent);
+        Assert.StartsWith("24 years building on the Microsoft stack.", hero.Find(".hero-pitch").TextContent);
         Assert.Contains("Years  = <span class=\"tk-num\">24</span>", hero.Markup);
+        Assert.Equal("#ask", hero.Find("a.btn-primary").GetAttribute("href"));
     }
 
     [Fact]
@@ -57,13 +59,15 @@ public class ComponentTests : BunitContext
     }
 
     [Fact]
-    public void Agent_button_stays_hidden_until_the_api_says_it_is_available()
+    public void Ask_panel_is_disabled_until_the_api_says_the_agent_is_available()
     {
-        var hidden = Render<TalkToAgent>();
-        Assert.Empty(hidden.FindAll("button"));
+        var offline = Render<AskMyAi>();
+        Assert.True(offline.Find("#ask-input").HasAttribute("disabled"));
+        Assert.Contains("offline", offline.Find(".ask-note").TextContent);
 
         JSInterop.SetupModule("./js/agent.js").Setup<bool>("available").SetResult(true);
-        var shown = Render<TalkToAgent>();
-        Assert.Equal("Talk to my AI agent", shown.Find("button.agent-button").TextContent.Trim());
+        var live = Render<AskMyAi>();
+        Assert.False(live.Find("#ask-input").HasAttribute("disabled"));
+        Assert.Equal(4, live.FindAll(".ask-chips button:not([disabled])").Count);
     }
 }

@@ -3,6 +3,14 @@
 @inject TimeProvider Clock
 
 <a class="skip" href="#main">Skip to content</a>
+<nav class="topbar page" aria-label="Site">
+    <a class="topbar-id" href="./">
+        <img src="img/jeremy-moore.webp" width="240" height="240" alt="Portrait of @Profile.Name" />
+        <span>@Profile.Name</span>
+    </a>
+    <span class="topbar-status"><span class="dot" aria-hidden="true"></span>@Profile.Availability</span>
+    <a class="btn btn-small" href="@Email.Href">Email me</a>
+</nav>
 <main id="main" class="page">
     @Body
 </main>
@@ -10,3 +18,7 @@
     <span>© @Clock.GetLocalNow().Year @Profile.Name</span>
     <span>Built with C# &amp; Blazor WebAssembly</span>
 </footer>
+
+@code {
+    private ContactLink Email => Profile.Contact.First(link => link.Href.StartsWith("mailto:"));
+}
