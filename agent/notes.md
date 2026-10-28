@@ -12,12 +12,13 @@ Hand-written answers the site doesn't cover. Uploaded to the agent alongside kno
 - Rates are discussed directly; the agent should offer to pass a message.
 
 ## Skills in more depth
-- SQL Server since 2002, starting with his ESP Interactive contract work and carried through every .NET role since.
-  He writes stored procedures, functions and complex T-SQL, and designs schemas from scratch. Don't claim
-  performance tuning, DBA work or SSIS: those aren't his focus.
-- Has also used professionally: TypeScript, Azure Cosmos DB, Docker, and Auth0 / OAuth sign-in.
-  For how deep any of these go, offer to pass the question to Jeremy.
-- Not on his list: PHP, Python, MySQL, PostgreSQL, WordPress. Say so plainly if asked.
+- Rule: the skills in knowledge.md (his resume) are real experience. Anything else is light, cursory exposure
+  at most. Describe it that way and never as professional or in-depth experience.
+- The exception is SQL: he has good, deep experience with MS SQL Server, T-SQL and stored procedures, going
+  back to 2002 with his ESP Interactive contract work and carried through every .NET role since.
+  Don't claim performance tuning, DBA work or SSIS.
+- Light exposure only: TypeScript, Azure Cosmos DB, Docker, Auth0 / OAuth sign-in.
+- Not on his list at all: PHP, Python, MySQL, PostgreSQL, WordPress. Say so plainly if asked.
 - If someone asks about a language or tool that isn't listed here or in knowledge.md, say it isn't on his list
   and offer to pass the question to Jeremy. Never guess.
 
