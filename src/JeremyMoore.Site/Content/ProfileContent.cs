@@ -42,11 +42,11 @@ public static class ProfileContent
                 Summary: "Healthcare revenue-cycle software processing EDI transactions under HIPAA and HITECH.",
                 Highlights:
                 [
-                    "Designed new .NET 8 APIs and standalone utilities for enterprise healthcare clients.",
+                    "Designed new .NET APIs and standalone utilities for enterprise healthcare clients, most recently on .NET 8.",
                     "Refactored legacy WebForms and MVC code into modern C# using standard design patterns.",
                     "Ran CI/CD on Azure DevOps and Octopus Deploy, and upgraded aging Windows Server 2012 environments.",
                 ],
-                Stack: ["C#", ".NET 8", "ASP.NET MVC", "WebForms", "SQL Server", "Azure DevOps"]),
+                Stack: ["C#", ".NET Framework", ".NET 8", "ASP.NET MVC", "WebForms", "SQL Server", "Azure DevOps"]),
             new Role(
                 Title: "Full-Stack Developer",
                 Company: "ProActive Webs",
