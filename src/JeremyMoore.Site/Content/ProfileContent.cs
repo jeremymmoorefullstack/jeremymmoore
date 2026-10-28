@@ -9,13 +9,13 @@ public static class ProfileContent
         Name: "Jeremy M. Moore",
         Title: "Senior Full-Stack Engineer · C# / .NET",
         Headline: "I engineer software built to last, from .NET APIs to AI agents.",
-        Pitch: "{0} years building on the Microsoft stack. Clean, tested C#, cloud services on Azure, " +
-               "and AI that does real work inside real systems.",
+        Pitch: "{0} years shipping software, from Classic ASP to .NET 10. Clean, tested C#, cloud services " +
+               "on Azure, and AI that does real work inside real systems.",
         Availability: "Available for contract & part-time",
         Location: "Santa Rosa, Sonoma County · SF Bay Area · Remote",
         Summary:
             "I build dependable software on .NET: APIs, services, and the web apps in front of them. " +
-            "My career runs from Classic ASP to .NET 8, including six years on HIPAA-regulated " +
+            "My career runs from Classic ASP to .NET 10, including six years on HIPAA-regulated " +
             "healthcare EDI. I care about clean, maintainable code, and I've worked remotely for most of my career.",
         Experience:
         [

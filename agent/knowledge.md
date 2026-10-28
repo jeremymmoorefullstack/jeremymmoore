@@ -3,7 +3,7 @@
 Senior Full-Stack Engineer · C# / .NET. Based in Santa Rosa, Sonoma County · SF Bay Area · Remote.
 Writing software professionally since 2002.
 
-I build dependable software on .NET: APIs, services, and the web apps in front of them. My career runs from Classic ASP to .NET 8, including six years on HIPAA-regulated healthcare EDI. I care about clean, maintainable code, and I've worked remotely for most of my career.
+I build dependable software on .NET: APIs, services, and the web apps in front of them. My career runs from Classic ASP to .NET 10, including six years on HIPAA-regulated healthcare EDI. I care about clean, maintainable code, and I've worked remotely for most of my career.
 
 ## Experience, newest first
 

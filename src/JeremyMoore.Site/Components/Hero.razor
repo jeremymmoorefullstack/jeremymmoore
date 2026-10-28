@@ -5,17 +5,19 @@
 <header class="hero">
     <div class="hero-grid">
         <div class="hero-copy">
-            <p class="eyebrow is-accent">@Profile.Title · AI systems</p>
+            <div class="hero-id">
+                <img class="hero-photo" src="img/jeremy-moore.webp" width="240" height="240" alt="Portrait of @Profile.Name" />
+                <div>
+                    <p class="hero-name">@Profile.Name</p>
+                    <p class="eyebrow is-accent">@Profile.Title · AI systems</p>
+                </div>
+            </div>
+
             <h1 class="hero-headline">@Profile.Headline</h1>
             <p class="hero-pitch">@Profile.PitchFor(Clock)</p>
-            <div class="hero-ctas">
-                <a class="btn btn-primary" href="#ask">Ask my AI <span aria-hidden="true">→</span></a>
-                <a class="btn" href="#section-experience">See the work</a>
-            </div>
-        </div>
 
-        <figure class="code-card" aria-label="@AriaSummary">
-            <figcaption class="code-card-bar"><span></span><span></span><span></span><em>Engineer.cs</em></figcaption>
+            <figure class="code-card" aria-label="@AriaSummary">
+                <figcaption class="code-card-bar"><span></span><span></span><span></span><em>Engineer.cs</em></figcaption>
 <pre><code><span class="tk-kw">var</span> jeremy = <span class="tk-kw">new</span> <span class="tk-type">Engineer</span>
 {
     Focus  = <span class="tk-str">"C# · .NET · Azure · AI"</span>,
@@ -23,10 +25,16 @@
     Years  = <span class="tk-num">@Years</span>,
     Remote = <span class="tk-kw">true</span>,
 };</code></pre>
-        </figure>
-    </div>
+            </figure>
 
-    <AskMyAi />
+            <div class="hero-ctas">
+                <a class="btn btn-primary" href="#ask">Ask my AI <span aria-hidden="true">→</span></a>
+                <a class="btn" href="#section-experience">See the work</a>
+            </div>
+        </div>
+
+        <AskMyAi />
+    </div>
 
     <dl class="stats">
         <div><dt>Years shipping</dt><dd>@Years</dd></div>
@@ -40,5 +48,5 @@
     private int Years => Profile.YearsExperience(Clock);
 
     private string AriaSummary =>
-        $"C#, .NET and Azure engineer since {Profile.CareerStart}, {Years} years of experience, remote.";
+        $"C#, .NET and Azure engineer since {Profile.CareerStart}, {Years} years of experience, remote-first.";
 }

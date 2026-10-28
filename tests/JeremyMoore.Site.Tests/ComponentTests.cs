@@ -22,7 +22,8 @@ public class ComponentTests : BunitContext
         var hero = Render<Hero>();
 
         Assert.Equal(ProfileContent.Jeremy.Headline, hero.Find("h1.hero-headline").TextContent);
-        Assert.StartsWith("24 years building on the Microsoft stack.", hero.Find(".hero-pitch").TextContent);
+        Assert.StartsWith("24 years shipping software, from Classic ASP to .NET 10.", hero.Find(".hero-pitch").TextContent);
+        Assert.NotNull(hero.Find("img.hero-photo"));
         Assert.Contains("Years  = <span class=\"tk-num\">24</span>", hero.Markup);
         Assert.Equal("#ask", hero.Find("a.btn-primary").GetAttribute("href"));
     }
