@@ -38,7 +38,8 @@ public sealed class ResendMessageSender(HttpClient http, IOptions<AgentOptions> 
                     """,
             }),
         };
-        request.Headers.Authorization = new("Bearer", settings.ResendApiKey);
+        // Keys pasted into the portal can carry a trailing newline, which header validation rejects.
+        request.Headers.Authorization = new("Bearer", settings.ResendApiKey!.Trim());
 
         using var response = await http.SendAsync(request, cancellationToken);
         response.EnsureSuccessStatusCode();

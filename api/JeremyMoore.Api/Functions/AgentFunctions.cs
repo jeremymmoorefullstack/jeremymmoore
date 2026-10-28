@@ -111,13 +111,16 @@ public sealed class AgentFunctions(
                 result = "Sent. Tell the visitor Jeremy has it and will reply by email.",
             });
         }
-        catch (HttpRequestException exception)
+        catch (Exception exception) when (exception is not OperationCanceledException)
         {
-            logger.LogError(exception, "Sending a visitor message failed ({Status}).", exception.StatusCode);
+            // Any failure here should reach the agent as a sentence it can relay, never as a bare 500.
+            var status = (exception as HttpRequestException)?.StatusCode;
+            logger.LogError(exception, "Sending a visitor message failed ({Status}).", status);
             return await Json(request, HttpStatusCode.OK, new
             {
                 sent = false,
                 result = "Not sent: email failed. Suggest emailing jeremy@jeremymmoore.com instead.",
+                error = status is null ? exception.GetType().Name : $"HTTP {(int)status}",
             });
         }
     }
