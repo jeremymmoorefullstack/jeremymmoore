@@ -12,7 +12,7 @@ public static class ProfileContent
         Summary:
             "I build dependable software on .NET: APIs, services, and the web apps in front of them. " +
             "My career runs from Classic ASP to .NET 8, including six years on HIPAA-regulated " +
-            "healthcare EDI. I care about clean, maintainable code and have worked remotely the whole way.",
+            "healthcare EDI. I care about clean, maintainable code, and I've worked remotely for most of my career.",
         Experience:
         [
             new Role(
