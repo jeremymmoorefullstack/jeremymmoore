@@ -35,7 +35,7 @@
 |------|-------|
 | `Agent__ElevenLabsApiKey` | ElevenLabs API key (scoped to Agents) |
 | `Agent__AgentId` | `agent_…` |
-| `Agent__ToolSecret` | Long random string, same as the tool's header secret |
+| `Agent__ToolSecret` | Long random string, same as the tool's header secret. Generate with `openssl rand -hex 32 \| tr -d '\n' \| pbcopy`: ElevenLabs rejects a header value with a trailing newline. |
 | `Agent__ResendApiKey` | Resend API key (sending domain jeremymmoore.com) |
 
 Optional: `Agent__SessionsPerVisitorPerHour` (default 6), `Agent__SessionsPerDay` (default 40).
