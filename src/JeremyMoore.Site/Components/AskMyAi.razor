@@ -220,6 +220,7 @@
     {
         "microphone" => "Voice needs your microphone. Allow it and try again, or just type.",
         "busy" => $"The agent has had a lot of conversations. Try again later, or email {Email}.",
+        "timeout" => "The call couldn't connect. Try again in a minute, or just type.",
         _ => $"The agent isn't answering right now. Email {Email} instead.",
     };
 
@@ -232,6 +233,14 @@
         }
 
         _lines.Add(new(source == "ai" ? "ai" : "you", text));
+        StateHasChanged();
+    }
+
+    [JSInvokable]
+    public void OnNoMicrophoneInput()
+    {
+        _lines.Add(new("note",
+            "The agent isn't hearing your microphone. Check the input device and that your browser has mic access in system settings, or end the call and type instead."));
         StateHasChanged();
     }
 

@@ -12,7 +12,10 @@ export async function available() {
     }
 }
 
-// Each start* returns "live", or why it couldn't: "microphone", "busy" or "unavailable".
+const connectTimeoutMs = 20000;
+const silentMicMs = 8000;
+
+// Each start* returns "live", or why it couldn't: "microphone", "busy", "timeout" or "unavailable".
 export async function startText(dotnet, context) {
     const session = await requestSession("text");
     if (session.error) return session.error;
@@ -77,7 +80,7 @@ async function open(dotnet, kind, options, context) {
 
     try {
         const { Conversation } = await import(sdkUrl);
-        conversation = await Conversation.startSession({
+        const starting = Conversation.startSession({
             ...options,
             // Typed messages are already on screen; only spoken ones need a transcript line.
             onMessage: ({ source, message }) => {
@@ -96,6 +99,16 @@ async function open(dotnet, kind, options, context) {
             onError: message => console.warn("Agent:", message),
         });
 
+        // Never leave the visitor on "Connecting" forever; a late connection is closed as soon as it lands.
+        const started = await Promise.race([starting, delay(connectTimeoutMs).then(() => null)]);
+        if (!started) {
+            starting.then(late => late.endSession()).catch(() => {});
+            return "timeout";
+        }
+        conversation = started;
+
+        if (kind === "voice") watchMicrophone(dotnet, started);
+
         if (kind === "text") {
             await Promise.race([greeting, new Promise(resolve => setTimeout(resolve, 4000))]);
             skipGreeting = false;
@@ -109,4 +122,26 @@ async function open(dotnet, kind, options, context) {
         conversation = null;
         return "unavailable";
     }
+}
+
+// The browser can grant the mic and still send silence (wrong input device, OS-level block, muted headset).
+// If nothing registers soon after connecting, tell the visitor instead of letting the agent talk to no one.
+function watchMicrophone(dotnet, current) {
+    const startedAt = Date.now();
+    const timer = setInterval(async () => {
+        if (conversation !== current) return clearInterval(timer);
+        try {
+            if (await current.getInputVolume() > 0.05) return clearInterval(timer);
+        } catch {
+            return clearInterval(timer);
+        }
+        if (Date.now() - startedAt > silentMicMs) {
+            clearInterval(timer);
+            dotnet.invokeMethodAsync("OnNoMicrophoneInput");
+        }
+    }, 500);
+}
+
+function delay(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
 }
