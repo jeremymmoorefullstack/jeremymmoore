@@ -71,4 +71,18 @@ public class ComponentTests : BunitContext
         Assert.False(live.Find("#ask-input").HasAttribute("disabled"));
         Assert.Equal(4, live.FindAll(".ask-chips button:not([disabled])").Count);
     }
+
+    [Fact]
+    public void Starting_a_call_shows_an_unmissable_connecting_banner()
+    {
+        var module = JSInterop.SetupModule("./js/agent.js");
+        module.Setup<bool>("available").SetResult(true);
+        module.Setup<string>("startVoice", _ => true); // never completes: the call stays "connecting"
+
+        var panel = Render<AskMyAi>();
+        panel.Find("button.ask-mic").Click();
+
+        Assert.Contains("Connecting your call", panel.Find(".ask-call.is-connecting").TextContent);
+        Assert.Contains("Connecting", panel.Find("button.ask-mic").TextContent);
+    }
 }

@@ -263,6 +263,52 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
 .ask-status[data-state="connecting"] { color: var(--accent); }
 
 /* Beside the hero copy the log fills whatever height that column sets, then scrolls. */
+/* Voice call banner: impossible to miss while connecting or live. */
+.ask-call {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    padding: 0.85rem 1.25rem;
+    border-bottom: 1px solid var(--line);
+    background: var(--accent-dim);
+}
+.ask-call.is-live { background: color-mix(in srgb, var(--ok) 12%, transparent); }
+.ask-call div { display: grid; gap: 0.15rem; margin-right: auto; }
+.ask-call strong { font-size: 0.95rem; }
+.ask-call span:not(.ask-pulse) { font: 400 0.78rem var(--mono); color: var(--muted); }
+
+.ask-pulse {
+    flex: none;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    color: var(--accent);
+    background: currentColor;
+    animation: ask-pulse 1.2s ease-out infinite;
+}
+.ask-call.is-live .ask-pulse { color: var(--ok); }
+
+@keyframes ask-pulse {
+    0% { box-shadow: 0 0 0 0 color-mix(in srgb, currentColor 55%, transparent); }
+    100% { box-shadow: 0 0 0 12px transparent; }
+}
+
+.ask-spinner {
+    display: inline-block;
+    width: 0.8em;
+    height: 0.8em;
+    margin-right: 0.45em;
+    border: 2px solid currentColor;
+    border-right-color: transparent;
+    border-radius: 50%;
+    vertical-align: -0.1em;
+    animation: ask-spin 0.8s linear infinite;
+}
+
+@keyframes ask-spin { to { transform: rotate(360deg); } }
+
+.ask-status[data-state="connecting"] { animation: ask-blink 1.2s infinite; }
+
 .ask-log {
     display: flex;
     flex: 1 1 0;
@@ -445,7 +491,7 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
 
 @media (prefers-reduced-motion: reduce) {
     html { scroll-behavior: auto; }
-    .ask-line.is-typing span, .topbar-status .dot { animation: none !important; }
+    .ask-line.is-typing span, .topbar-status .dot, .ask-pulse, .ask-spinner, .ask-status { animation: none !important; }
 }
 
 /* ---------- Blazor error UI ---------- */

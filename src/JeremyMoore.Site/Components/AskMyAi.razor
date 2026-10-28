@@ -12,6 +12,28 @@
         <span class="ask-status" data-state="@StatusKey">@StatusText</span>
     </header>
 
+    @if (_callConnecting)
+    {
+        <div class="ask-call is-connecting" role="status">
+            <span class="ask-pulse" aria-hidden="true"></span>
+            <div>
+                <strong>Connecting your call…</strong>
+                <span>Allow the microphone if your browser asks. This takes a few seconds.</span>
+            </div>
+        </div>
+    }
+    else if (_session is Session.Voice)
+    {
+        <div class="ask-call is-live" role="status">
+            <span class="ask-pulse" aria-hidden="true"></span>
+            <div>
+                <strong>You're live. Go ahead and talk.</strong>
+                <span>@(_speaking ? "The agent is speaking…" : "Listening…") · @Elapsed</span>
+            </div>
+            <button type="button" class="btn btn-small" @onclick="EndVoiceAsync">End call</button>
+        </div>
+    }
+
     <ol class="ask-log" @ref="_log" aria-live="polite">
         @if (_lines.Count == 0)
         {
@@ -39,7 +61,14 @@
                placeholder="@Placeholder" aria-label="Ask a question about Jeremy's work" maxlength="500" autocomplete="off" />
         <button type="button" class="ask-mic @(_session is Session.Voice ? "is-live" : "")" disabled="@(_available is not true || _connecting)"
                 @onclick="ToggleVoiceAsync" aria-label="@(_session is Session.Voice ? "End voice call" : "Talk instead")">
-            @(_session is Session.Voice ? $"End {Elapsed}" : "Talk")
+            @if (_callConnecting)
+            {
+                <span class="ask-spinner" aria-hidden="true"></span>@:Connecting…
+            }
+            else
+            {
+                @(_session is Session.Voice ? $"End {Elapsed}" : "Talk")
+            }
         </button>
         <button type="submit" class="ask-send" disabled="@(!CanSend || string.IsNullOrWhiteSpace(_draft))" aria-label="Send">→</button>
     </form>
@@ -68,6 +97,7 @@
     private bool? _available;
     private Session _session = Session.None;
     private bool _connecting;
+    private bool _callConnecting;
     private bool _waiting;
     private bool _speaking;
     private string _draft = "";
@@ -164,10 +194,9 @@
             return;
         }
 
-        _connecting = true;
-        _lines.Add(new("note", "Starting a voice call. Allow the microphone if your browser asks."));
+        _connecting = _callConnecting = true;
         var result = await Start("startVoice", Transcript());
-        _connecting = false;
+        _connecting = _callConnecting = false;
         if (result != "live")
         {
             _lines.Add(new("note", Problem(result)));
