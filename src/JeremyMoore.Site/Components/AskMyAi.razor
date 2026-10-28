@@ -72,7 +72,7 @@
     private bool _speaking;
     private string _draft = "";
     private TimeSpan _elapsed;
-    private int _renderedLines;
+    private (int Lines, bool Waiting) _rendered;
 
     private bool CanSend => _available is true && !_connecting && !_waiting && _session is not Session.Voice;
 
@@ -115,9 +115,11 @@
             return;
         }
 
-        if (_module is not null && _lines.Count + (_waiting ? 1 : 0) != _renderedLines)
+        // A reply replacing the typing dots keeps the row count the same, so track both.
+        var shape = (_lines.Count, _waiting);
+        if (_module is not null && shape != _rendered)
         {
-            _renderedLines = _lines.Count + (_waiting ? 1 : 0);
+            _rendered = shape;
             await _module.InvokeVoidAsync("scrollToEnd", _log);
         }
     }
