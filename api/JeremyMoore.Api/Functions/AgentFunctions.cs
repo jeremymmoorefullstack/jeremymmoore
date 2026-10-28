@@ -147,13 +147,15 @@ public sealed class AgentFunctions(
 
     public static bool HasToolSecret(HttpRequestData request, string? expected)
     {
+        // Secrets pasted into a portal can pick up a trailing newline, so whitespace never counts.
+        expected = expected?.Trim();
         if (string.IsNullOrEmpty(expected) || !request.Headers.TryGetValues("x-agent-secret", out var values))
         {
             return false;
         }
 
         return CryptographicOperations.FixedTimeEquals(
-            Encoding.UTF8.GetBytes(values.FirstOrDefault() ?? ""),
+            Encoding.UTF8.GetBytes(values.FirstOrDefault()?.Trim() ?? ""),
             Encoding.UTF8.GetBytes(expected));
     }
 
