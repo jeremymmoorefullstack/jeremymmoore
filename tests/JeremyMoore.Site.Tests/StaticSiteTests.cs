@@ -15,7 +15,7 @@ public class StaticSiteTests
     {
         var html = await StaticSite.RenderHomeAsync(Profile, new FixedClock(new DateTimeOffset(2030, 6, 15, 12, 0, 0, TimeSpan.Zero)));
 
-        foreach (var id in new[] { "about", "experience", "skills", "education", "projects", "contact" })
+        foreach (var id in new[] { "about", "experience", "skills", "education", "projects", "faq", "contact" })
         {
             Assert.Contains($"id=\"section-{id}\"", html);
         }
@@ -59,4 +59,29 @@ public class StaticSiteTests
     [Fact]
     public void Sitemap_lists_the_home_page() =>
         Assert.Contains("<loc>https://jeremymmoore.com/</loc>", StaticSite.BuildSitemap(Site, new DateOnly(2026, 10, 27)));
+
+    [Fact]
+    public void Json_ld_includes_the_faq()
+    {
+        var script = StaticSite.BuildJsonLd(Profile, Site);
+        var json = script["<script type=\"application/ld+json\">".Length..^"</script>".Length];
+
+        using var doc = JsonDocument.Parse(json);
+        var faq = doc.RootElement.GetProperty("@graph").EnumerateArray()
+            .Single(node => node.GetProperty("@type").GetString() == "FAQPage");
+
+        Assert.Equal(Profile.Faq.Count, faq.GetProperty("mainEntity").GetArrayLength());
+    }
+
+    [Fact]
+    public void Llms_txt_summarizes_the_profile_with_faq_and_contact()
+    {
+        var llms = LlmsText.Build(Profile, Site);
+
+        Assert.StartsWith("# Jeremy M. Moore", llms);
+        Assert.Contains(Profile.Availability, llms);
+        Assert.Contains("### Is Jeremy available for contract or part-time work?", llms);
+        Assert.Contains("- Email: jeremy@jeremymmoore.com", llms);
+        Assert.DoesNotContain("mailto:", llms);
+    }
 }

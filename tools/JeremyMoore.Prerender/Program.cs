@@ -34,6 +34,7 @@ foreach (var stale in new[] { "index.html.br", "index.html.gz" })
 
 var today = DateOnly.FromDateTime(clock.GetLocalNow().Date);
 await File.WriteAllTextAsync(Path.Combine(wwwroot, "sitemap.xml"), StaticSite.BuildSitemap(site, today));
+await File.WriteAllTextAsync(Path.Combine(wwwroot, "llms.txt"), LlmsText.Build(profile, site));
 
-Console.WriteLine($"Prerendered {indexPath} ({html.Length:N0} chars) and wrote sitemap.xml.");
+Console.WriteLine($"Prerendered {indexPath} ({html.Length:N0} chars) and wrote sitemap.xml and llms.txt.");
 return 0;

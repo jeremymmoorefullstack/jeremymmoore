@@ -1,0 +1,13 @@
+<dl class="faq">
+    @foreach (var item in Items)
+    {
+        <div class="faq-item">
+            <dt>@item.Question</dt>
+            <dd>@item.Answer</dd>
+        </div>
+    }
+</dl>
+
+@code {
+    [Parameter, EditorRequired] public IReadOnlyList<FaqItem> Items { get; set; } = [];
+}

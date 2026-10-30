@@ -13,6 +13,7 @@ public sealed record Profile(
     IReadOnlyList<Project> Projects,
     IReadOnlyList<SkillGroup> Skills,
     IReadOnlyList<Degree> Education,
+    IReadOnlyList<FaqItem> Faq,
     IReadOnlyList<ContactLink> Contact)
 {
     public int CareerStart => Experience.Min(role => role.Start);
@@ -51,5 +52,8 @@ public sealed record Project(
 public sealed record SkillGroup(string Name, IReadOnlyList<string> Items, bool Primary = false);
 
 public sealed record Degree(string Title, string Field, string School, int Year);
+
+/// <summary>A question visitors (and search and AI answer engines) ask, answered only from the resume.</summary>
+public sealed record FaqItem(string Question, string Answer);
 
 public sealed record ContactLink(string Label, string Display, string Href);

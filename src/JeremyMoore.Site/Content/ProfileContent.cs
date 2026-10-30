@@ -106,6 +106,35 @@ public static class ProfileContent
         [
             new Degree("Bachelor of Science", "Software Development", "Western Governors University", 2018),
         ],
+        Faq:
+        [
+            new FaqItem(
+                "Is Jeremy available for contract or part-time work?",
+                "Yes. He takes contract and part-time work, up to about 30 hours a week. He's remote-first from Santa Rosa, " +
+                "and on-site work is possible in Santa Rosa, Rohnert Park and Windsor. He isn't looking for full-time roles."),
+            new FaqItem(
+                "What does Jeremy build with C# and .NET?",
+                "APIs, services and the web apps in front of them: new .NET APIs and standalone utilities, and refactors of " +
+                "legacy WebForms and MVC code into modern C#. This site is Blazor WebAssembly on .NET 10."),
+            new FaqItem(
+                "Does Jeremy build AI voice agents and automations?",
+                "Yes. At Dolooma he built an AI phone dispatcher on 800.com that answers roadside calls around the clock and " +
+                "turns them into jobs through webhooks and live-lookup tools, and he automates handoffs and alerts with n8n. " +
+                "The agent on this page is his too: ElevenLabs for voice, with a C# backend on Azure Functions."),
+            new FaqItem(
+                "Does Jeremy have healthcare or HIPAA experience?",
+                "Yes. He spent six years at Waystar on healthcare revenue-cycle software that processes EDI transactions " +
+                "under HIPAA and HITECH."),
+            new FaqItem(
+                "Which databases does Jeremy work with?",
+                "Mainly SQL Server, which he has used since 2002, including T-SQL and stored procedures. He also works with MongoDB."),
+            new FaqItem(
+                "Where is Jeremy based?",
+                "Santa Rosa, in Sonoma County, California, part of the SF Bay Area. He works remotely with teams across US time zones."),
+            new FaqItem(
+                "How do I get in touch with Jeremy?",
+                "Email jeremy@jeremymmoore.com, or ask the AI agent at the top of this page to pass him a message."),
+        ],
         Contact:
         [
             new ContactLink("Email", "jeremy@jeremymmoore.com", "mailto:jeremy@jeremymmoore.com"),

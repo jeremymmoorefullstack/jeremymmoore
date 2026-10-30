@@ -99,10 +99,25 @@ public static class StaticSite
             ["publisher"] = new JsonObject { ["@id"] = new Uri(site, "#person").ToString() },
         };
 
+        // FAQ rich results are limited on Google now, but answer engines still read FAQPage markup.
+        var faq = new JsonObject
+        {
+            ["@type"] = "FAQPage",
+            ["@id"] = new Uri(site, "#faq").ToString(),
+            ["mainEntity"] = new JsonArray(profile.Faq
+                .Select(item => (JsonNode)new JsonObject
+                {
+                    ["@type"] = "Question",
+                    ["name"] = item.Question,
+                    ["acceptedAnswer"] = new JsonObject { ["@type"] = "Answer", ["text"] = item.Answer },
+                })
+                .ToArray()),
+        };
+
         var graph = new JsonObject
         {
             ["@context"] = "https://schema.org",
-            ["@graph"] = new JsonArray(person, website),
+            ["@graph"] = new JsonArray(person, website, faq),
         };
 
         // Keep "</script>" from ever closing the tag early.

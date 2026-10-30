@@ -57,6 +57,13 @@ public static class AgentKnowledge
         }
 
         text.AppendLine();
+        text.AppendLine("## FAQ");
+        foreach (var item in profile.Faq)
+        {
+            text.AppendLine($"- {item.Question} {item.Answer}");
+        }
+
+        text.AppendLine();
         text.AppendLine("## Contact");
         foreach (var link in profile.Contact)
         {
