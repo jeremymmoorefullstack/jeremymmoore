@@ -1,5 +1,6 @@
 using System.Text.Json;
 using System.Text.Json.Nodes;
+using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.Extensions.DependencyInjection;
@@ -12,9 +13,10 @@ using JeremyMoore.Site.Pages;
 namespace JeremyMoore.Prerender;
 
 /// <summary>
-/// Turns the published index.html into a crawlable page: the home page rendered to static HTML,
-/// JSON-LD built from the same <see cref="Profile"/>, and a sitemap. Blazor replaces the
-/// prerendered markup when the runtime boots, so both always come from one source.
+/// Turns the published index.html into crawlable pages: the home page and each case study rendered to
+/// static HTML with their own title and description, JSON-LD built from the same <see cref="Profile"/>,
+/// a sitemap, and the routes that serve them. Blazor replaces the prerendered markup when the runtime
+/// boots, so both always come from one source.
 /// </summary>
 public static class StaticSite
 {
@@ -22,7 +24,15 @@ public static class StaticSite
     public const string AppEnd = "<!-- /prerender:app -->";
     public const string JsonLdMarker = "<!-- prerender:jsonld -->";
 
-    public static async Task<string> RenderHomeAsync(Profile profile, TimeProvider clock)
+    public static Task<string> RenderHomeAsync(Profile profile, TimeProvider clock) =>
+        RenderPageAsync<Home>(profile, clock, pageParameters: null);
+
+    public static Task<string> RenderCaseStudyAsync(Profile profile, TimeProvider clock, CaseStudy study) =>
+        RenderPageAsync<CaseStudyPage>(profile, clock, new Dictionary<string, object?> { [nameof(CaseStudyPage.Slug)] = study.Slug });
+
+    private static async Task<string> RenderPageAsync<TPage>(
+        Profile profile, TimeProvider clock, IReadOnlyDictionary<string, object?>? pageParameters)
+        where TPage : IComponent
     {
         var services = new ServiceCollection()
             .AddLogging()
@@ -40,7 +50,12 @@ public static class StaticSite
                 [nameof(LayoutView.Layout)] = typeof(MainLayout),
                 [nameof(LayoutView.ChildContent)] = (RenderFragment)(builder =>
                 {
-                    builder.OpenComponent<Home>(0);
+                    builder.OpenComponent<TPage>(0);
+                    foreach (var (name, value) in pageParameters ?? new Dictionary<string, object?>())
+                    {
+                        builder.AddComponentParameter(1, name, value);
+                    }
+
                     builder.CloseComponent();
                 }),
             });
@@ -50,7 +65,8 @@ public static class StaticSite
         });
     }
 
-    public static string BuildJsonLd(Profile profile, Uri site)
+    /// <summary>The home page gets the FAQ; a case study page gets an Article written by the same Person.</summary>
+    public static string BuildJsonLd(Profile profile, Uri site, CaseStudy? study = null)
     {
         var current = profile.ExperienceNewestFirst.First(role => role.IsCurrent);
 
@@ -114,10 +130,23 @@ public static class StaticSite
                 .ToArray()),
         };
 
+        var page = study is null
+            ? faq
+            : new JsonObject
+            {
+                ["@type"] = "Article",
+                ["@id"] = new Uri(site, $"{study.Path}#article").ToString(),
+                ["url"] = new Uri(site, study.Path).ToString(),
+                ["headline"] = study.Title,
+                ["description"] = study.Summary,
+                ["author"] = new JsonObject { ["@id"] = new Uri(site, "#person").ToString() },
+                ["about"] = new JsonArray(study.Stack.Select(tech => (JsonNode)tech).ToArray()),
+            };
+
         var graph = new JsonObject
         {
             ["@context"] = "https://schema.org",
-            ["@graph"] = new JsonArray(person, website, faq),
+            ["@graph"] = new JsonArray(person, website, page),
         };
 
         // Keep "</script>" from ever closing the tag early.
@@ -125,17 +154,56 @@ public static class StaticSite
         return $"<script type=\"application/ld+json\">{json}</script>";
     }
 
-    public static string BuildSitemap(Uri site, DateOnly lastModified) =>
-        $"""
-        <?xml version="1.0" encoding="UTF-8"?>
-        <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-          <url>
-            <loc>{site}</loc>
-            <lastmod>{lastModified:yyyy-MM-dd}</lastmod>
-          </url>
-        </urlset>
+    /// <summary>Every page, relative to the site root ("" is the home page).</summary>
+    public static string BuildSitemap(Uri site, DateOnly lastModified, IEnumerable<string> paths)
+    {
+        var urls = string.Concat(paths.Select(path => $"""
+              <url>
+                <loc>{new Uri(site, path)}</loc>
+                <lastmod>{lastModified:yyyy-MM-dd}</lastmod>
+              </url>
 
-        """;
+            """));
+
+        return $"""
+            <?xml version="1.0" encoding="UTF-8"?>
+            <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+            {urls}</urlset>
+
+            """;
+    }
+
+    /// <summary>Gives a prerendered copy of index.html its own title, description and canonical URL.</summary>
+    public static string WithMeta(string html, string title, string description, Uri url)
+    {
+        var encodedTitle = System.Net.WebUtility.HtmlEncode(title);
+        var encodedDescription = System.Net.WebUtility.HtmlEncode(description);
+
+        html = Regex.Replace(html, "<title>.*?</title>", $"<title>{encodedTitle}</title>");
+        html = ReplaceContent(html, "name=\"description\"", encodedDescription);
+        html = ReplaceContent(html, "property=\"og:title\"", encodedTitle);
+        html = ReplaceContent(html, "property=\"og:description\"", encodedDescription);
+        html = ReplaceContent(html, "property=\"og:url\"", url.ToString());
+        html = Regex.Replace(html, "<link rel=\"canonical\" href=\"[^\"]*\"", $"<link rel=\"canonical\" href=\"{url}\"");
+        return html;
+
+        static string ReplaceContent(string html, string attribute, string value) =>
+            Regex.Replace(html, $"(<meta {Regex.Escape(attribute)} content=\")[^\"]*(\")", match => match.Groups[1].Value + value + match.Groups[2].Value);
+    }
+
+    /// <summary>Clean URLs: /work/{slug} is served from the prerendered /work/{slug}.html.</summary>
+    public static string WithCaseStudyRoutes(string staticWebAppConfig, IEnumerable<CaseStudy> studies)
+    {
+        var config = JsonNode.Parse(staticWebAppConfig)!.AsObject();
+        var routes = config["routes"] as JsonArray ?? [];
+        foreach (var study in studies)
+        {
+            routes.Add(new JsonObject { ["route"] = $"/{study.Path}", ["rewrite"] = $"/{study.Path}.html" });
+        }
+
+        config["routes"] = routes;
+        return config.ToJsonString(new JsonSerializerOptions { WriteIndented = true });
+    }
 
     public static string Inject(string indexHtml, string appHtml, string jsonLd)
     {

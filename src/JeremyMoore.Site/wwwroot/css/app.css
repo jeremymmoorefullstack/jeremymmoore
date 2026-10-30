@@ -447,6 +447,23 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
 .project-lang { font: 400 0.75rem var(--mono); color: var(--tk-type); }
 .project p { margin: 0.4rem 0 0; color: var(--muted); }
 
+/* ---------- Work / case studies ---------- */
+.work-link { display: inline-block; margin-top: 0.75rem; font: 500 0.85rem var(--mono); color: var(--accent); text-decoration: none; }
+.work-link:hover { text-decoration: underline; }
+
+.case { max-width: var(--measure); padding-block: clamp(3rem, 8vh, 5rem) 3rem; }
+.case .eyebrow a { color: var(--muted); text-decoration: none; }
+.case .eyebrow a:hover { color: var(--accent); }
+.case-title { font-size: clamp(2rem, 4.5vw, 3rem); line-height: 1.08; letter-spacing: -0.03em; }
+.case-meta { margin: 0.75rem 0 0; font: 400 0.85rem var(--mono); color: var(--faint); }
+.case-summary { margin: 1.5rem 0 0; font-size: 1.15rem; }
+.case-part { margin-top: 2.5rem; }
+.case-part h2 { margin-bottom: 0.75rem; font: 500 0.8rem/1.6 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--accent); }
+.case-part p { margin: 0; color: var(--muted); }
+.case-cta { margin-top: 3rem; padding-top: 2rem; border-top: 1px solid var(--line); }
+.case-cta p { margin: 0; font-size: 1.15rem; }
+.case-cta .hero-ctas { margin-top: 1.25rem; }
+
 /* ---------- FAQ ---------- */
 .faq { display: grid; gap: 1.5rem; margin: 0; }
 .faq dt { font-weight: 600; }

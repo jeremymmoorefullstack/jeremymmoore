@@ -24,6 +24,14 @@ public static class LlmsText
                         "from it and can pass him a message.");
 
         text.AppendLine();
+        text.AppendLine("## Case studies");
+        text.AppendLine();
+        foreach (var study in profile.CaseStudies)
+        {
+            text.AppendLine($"- [{study.Title}]({new Uri(site, study.Path)}): {study.Company}, {study.Period}. {study.Summary}");
+        }
+
+        text.AppendLine();
         text.AppendLine("## Experience");
         text.AppendLine();
         foreach (var role in profile.ExperienceNewestFirst)

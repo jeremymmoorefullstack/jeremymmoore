@@ -1,0 +1,17 @@
+<ul class="projects">
+    @foreach (var study in Studies)
+    {
+        <li class="project">
+            <div class="project-head">
+                <h3><a href="@study.Path">@study.Title</a></h3>
+                <span class="role-period">@study.Company · @study.Period</span>
+            </div>
+            <p>@study.Summary</p>
+            <a class="work-link" href="@study.Path">Read the case study →</a>
+        </li>
+    }
+</ul>
+
+@code {
+    [Parameter, EditorRequired] public IReadOnlyList<CaseStudy> Studies { get; set; } = [];
+}

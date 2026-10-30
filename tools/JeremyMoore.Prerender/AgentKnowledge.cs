@@ -36,6 +36,25 @@ public static class AgentKnowledge
         }
 
         text.AppendLine();
+        text.AppendLine("## Case studies (each has its own page on the site)");
+        foreach (var study in profile.CaseStudies)
+        {
+            text.AppendLine();
+            text.AppendLine($"### {study.Title} ({study.Company}, {study.Period}), at jeremymmoore.com/{study.Path}");
+            text.AppendLine(study.Summary);
+            text.AppendLine($"Problem: {study.Problem}");
+            foreach (var item in study.Built)
+            {
+                text.AppendLine($"- Built: {item}");
+            }
+
+            foreach (var item in study.Results)
+            {
+                text.AppendLine($"- Result: {item}");
+            }
+        }
+
+        text.AppendLine();
         text.AppendLine("## Skills");
         foreach (var group in profile.Skills)
         {

@@ -82,6 +82,79 @@ public static class ProfileContent
                 ],
                 Stack: ["C#", "ASP.NET", "WebForms", "SQL Server"]),
         ],
+        CaseStudies:
+        [
+            new CaseStudy(
+                Slug: "ai-phone-dispatcher",
+                Title: "An AI phone dispatcher for roadside assistance",
+                Company: "Dolooma",
+                Period: "2024 – Present",
+                Summary: "A voice agent that answers roadside-assistance calls around the clock and turns each call into a job.",
+                Problem:
+                    "Roadside calls come in at all hours, and each one needs the same details captured accurately " +
+                    "before anyone can be dispatched.",
+                Built:
+                [
+                    "A voice agent on 800.com that answers calls 24/7 and collects a structured service request.",
+                    "Webhooks that turn each call into a job, plus live-lookup tools the agent calls mid-conversation.",
+                    "n8n workflows for the handoff: SMS and email notifications, and alerts when a step fails.",
+                ],
+                Results:
+                [
+                    "Calls are answered around the clock and arrive as structured jobs, ready to dispatch.",
+                    "The same approach runs the agent on this site: ElevenLabs for voice, with a C# backend on Azure Functions.",
+                ],
+                Stack: ["800.com", "n8n", "Webhooks", "Twilio", "Azure Functions", "Node.js", "MongoDB"]),
+            new CaseStudy(
+                Slug: "multi-site-platform",
+                Title: "One platform behind nearly twenty sites",
+                Company: "Dolooma",
+                Period: "2024 – Present",
+                Summary:
+                    "A config-driven Next.js platform that runs nearly twenty client and product sites, with SEO and " +
+                    "monitoring built in.",
+                Problem:
+                    "Every client and product needed its own fast, search-friendly site, without maintaining twenty " +
+                    "separate codebases.",
+                Built:
+                [
+                    "A config-driven Next.js template, so each site is mostly configuration and fixes reach every site.",
+                    "Technical SEO built in: JSON-LD, sitemaps and IndexNow, Google Business Profile, GA4 and Search Console.",
+                    "An internal dashboard that syncs Google Business listings and builds client reports.",
+                    "Azure Functions APIs on Node.js and MongoDB, with Bicep infrastructure.",
+                    "Application Insights with alerts across every production site.",
+                ],
+                Results:
+                [
+                    "New sites start from configuration instead of from scratch.",
+                    "Errors and failing forms raise an alert instead of going unnoticed.",
+                ],
+                Stack: ["Next.js", "React", "Node.js", "Azure Functions", "MongoDB", "Bicep", "Application Insights", "GitHub Actions"]),
+            new CaseStudy(
+                Slug: "healthcare-edi",
+                Title: "Modernizing HIPAA-regulated healthcare EDI on .NET",
+                Company: "Waystar",
+                Period: "2018 – 2024",
+                Summary:
+                    "Six years on healthcare revenue-cycle software that processes EDI transactions under HIPAA and HITECH: " +
+                    "new .NET APIs, legacy refactors, and the pipelines that ship them.",
+                Problem:
+                    "Enterprise healthcare clients rely on EDI processing that has to be correct and compliant, often on top " +
+                    "of aging WebForms and MVC code and Windows Server 2012 environments.",
+                Built:
+                [
+                    "New .NET APIs and standalone utilities for enterprise healthcare clients, most recently on .NET 8.",
+                    "Refactors of legacy WebForms and MVC code into modern C# using standard design patterns.",
+                    "SQL Server work throughout, with T-SQL and stored procedures.",
+                    "CI/CD on Azure DevOps and Octopus Deploy, and upgrades of aging Windows Server 2012 environments.",
+                ],
+                Results:
+                [
+                    "Legacy code moved onto modern, maintainable C#, under HIPAA and HITECH.",
+                    "Repeatable, automated deployments through Azure DevOps and Octopus Deploy.",
+                ],
+                Stack: ["C#", ".NET 8", "ASP.NET MVC", "WebForms", "SQL Server", "Healthcare EDI (X12)", "Azure DevOps", "Octopus Deploy"]),
+        ],
         Projects:
         [
             new Project(

@@ -26,6 +26,7 @@ public class ComponentTests : BunitContext
         Assert.NotNull(hero.Find("img.hero-photo"));
         Assert.Contains("Years  = <span class=\"tk-num\">24</span>", hero.Markup);
         Assert.Equal("#ask", hero.Find("a.btn-primary").GetAttribute("href"));
+        Assert.Equal("#section-work", hero.Find("a.btn:not(.btn-primary)").GetAttribute("href"));
     }
 
     [Fact]
@@ -55,7 +56,7 @@ public class ComponentTests : BunitContext
 
         var ids = home.FindAll("h2.section-label").Select(h => h.Id);
         Assert.Equal(
-            ["section-about", "section-experience", "section-skills", "section-education", "section-projects", "section-faq", "section-contact"],
+            ["section-about", "section-work", "section-experience", "section-skills", "section-education", "section-projects", "section-faq", "section-contact"],
             ids);
     }
 
@@ -84,5 +85,16 @@ public class ComponentTests : BunitContext
 
         Assert.Contains("Connecting your call", panel.Find(".ask-call.is-connecting").TextContent);
         Assert.Contains("Connecting", panel.Find("button.ask-mic").TextContent);
+    }
+
+    [Fact]
+    public void Case_study_page_renders_the_study_or_a_not_found()
+    {
+        var page = Render<CaseStudyPage>(p => p.Add(c => c.Slug, "healthcare-edi"));
+        Assert.Equal("Modernizing HIPAA-regulated healthcare EDI on .NET", page.Find("h1.case-title").TextContent);
+        Assert.Contains("Waystar", page.Find(".case-meta").TextContent);
+
+        var missing = Render<CaseStudyPage>(p => p.Add(c => c.Slug, "nope"));
+        Assert.Contains("doesn't exist", missing.Find("h1").TextContent);
     }
 }

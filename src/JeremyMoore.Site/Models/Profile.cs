@@ -10,6 +10,7 @@ public sealed record Profile(
     string Location,
     string Summary,
     IReadOnlyList<Role> Experience,
+    IReadOnlyList<CaseStudy> CaseStudies,
     IReadOnlyList<Project> Projects,
     IReadOnlyList<SkillGroup> Skills,
     IReadOnlyList<Degree> Education,
@@ -41,6 +42,21 @@ public sealed record Role(
     public bool IsCurrent => End is null;
 
     public string Period => End is int end ? $"{Start} – {end}" : $"{Start} – Present";
+}
+
+/// <summary>A case study with its own page at /work/{Slug}. Claims only what the resume supports.</summary>
+public sealed record CaseStudy(
+    string Slug,
+    string Title,
+    string Company,
+    string Period,
+    string Summary,
+    string Problem,
+    IReadOnlyList<string> Built,
+    IReadOnlyList<string> Results,
+    IReadOnlyList<string> Stack)
+{
+    public string Path => $"work/{Slug}";
 }
 
 public sealed record Project(

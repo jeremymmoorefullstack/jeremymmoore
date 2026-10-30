@@ -1,0 +1,74 @@
+@page "/work/{Slug}"
+@inject Profile Profile
+
+@if (Study is null)
+{
+    <PageTitle>Not found · @Profile.Name</PageTitle>
+    <section class="notfound">
+        <p class="code-inline">404 // case study not found</p>
+        <h1>That case study doesn't exist.</h1>
+        <a href="./#section-work">See all work</a>
+    </section>
+}
+else
+{
+    <PageTitle>@Study.Title · @Profile.Name</PageTitle>
+
+    <article class="case">
+        <p class="eyebrow"><a href="./#section-work">← All work</a></p>
+        <h1 class="case-title">@Study.Title</h1>
+        <p class="case-meta">@Study.Company · @Study.Period</p>
+        <p class="case-summary">@Study.Summary</p>
+
+        <section class="case-part">
+            <h2>The problem</h2>
+            <p>@Study.Problem</p>
+        </section>
+
+        <section class="case-part">
+            <h2>What I built</h2>
+            <ul class="role-highlights">
+                @foreach (var item in Study.Built)
+                {
+                    <li>@item</li>
+                }
+            </ul>
+        </section>
+
+        <section class="case-part">
+            <h2>The result</h2>
+            <ul class="role-highlights">
+                @foreach (var item in Study.Results)
+                {
+                    <li>@item</li>
+                }
+            </ul>
+        </section>
+
+        <section class="case-part">
+            <h2>Stack</h2>
+            <ul class="tags">
+                @foreach (var tech in Study.Stack)
+                {
+                    <li>@tech</li>
+                }
+            </ul>
+        </section>
+
+        <aside class="case-cta">
+            <p>Have something similar in mind?</p>
+            <div class="hero-ctas">
+                <a class="btn btn-primary" href="./#ask">Ask my AI <span aria-hidden="true">→</span></a>
+                <a class="btn" href="@Email.Href">Email me</a>
+            </div>
+        </aside>
+    </article>
+}
+
+@code {
+    [Parameter] public string Slug { get; set; } = "";
+
+    private CaseStudy? Study => Profile.CaseStudies.FirstOrDefault(study => study.Slug == Slug);
+
+    private ContactLink Email => Profile.Contact.First(link => link.Href.StartsWith("mailto:"));
+}
